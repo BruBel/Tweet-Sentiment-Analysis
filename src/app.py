@@ -8,7 +8,7 @@ def sendHashtag(hashtag: str):
 
   clr = TwitterCrawler()
 
-  df = clr.get_tweets(hashtag)
+  df = clr.persist_tweets(hashtag)
 
   return "Hashatg enviada: "+hashtag
 
