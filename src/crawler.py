@@ -56,7 +56,7 @@ class TwitterCrawler:
 
       final_obj["tweets"].append(obj)
     
-    db = mongo_client.Twitter
+    db = self.mongo_client.Twitter
 
     db.tweets.insert_one(final_obj)
 
