@@ -19,6 +19,8 @@ class TwitterCrawler:
     auth.set_access_token(self.access_token, self.access_token_secret)
     api = tweepy.API(auth,wait_on_rate_limit=True)
 
+    db = self.mongo_client.Twitter
+
     df = pd.DataFrame()
 
     dates = []
@@ -27,6 +29,8 @@ class TwitterCrawler:
     count_tweets = 0
     final_obj = {"hashtag": hashtag,
                  "tweets": []}
+
+    db.tweets.insert_one(final_obj)
 
     for tweet in tweepy.Cursor(api.search,q=hashtag,
                            lang="pt",
@@ -53,12 +57,8 @@ class TwitterCrawler:
       
       obj["date"] = date
       obj["tweet_text"] = tweet._json["full_text"]
-
-      final_obj["tweets"].append(obj)
     
-    db = self.mongo_client.Twitter
-
-    db.tweets.insert_one(final_obj)
+      db.tweets.update_one({'hashtag': hashtag}, {'$push', {'tweets': obj}})
 
     return "Hashtag "+hashtag+" inserida no banco com sucesso."
 
