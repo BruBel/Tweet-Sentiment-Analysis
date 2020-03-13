@@ -3,6 +3,7 @@ from config import *
 import pandas as pd
 import numpy as np
 import pymongo
+import time
 
 
 class TwitterCrawler:
@@ -37,31 +38,35 @@ class TwitterCrawler:
         for tweet in tweepy.Cursor(api.search, q=hashtag,
                                    lang="pt",
                                    tweet_mode="extended").items():
+            try:
+                obj = {"date": "",
+                       "tweet_text": ""}
 
-            obj = {"date": "",
-                   "tweet_text": ""}
+                ts = tweet.created_at
 
-            ts = tweet.created_at
+                date = str(ts.day)+"/"+str(ts.month)+"/"+str(ts.year)
 
-            date = str(ts.day)+"/"+str(ts.month)+"/"+str(ts.year)
+                if actual_date == 0:
 
-            if actual_date == 0:
+                    actual_date = date
 
-                actual_date = date
+                if date != actual_date:
 
-            if date != actual_date:
+                    actual_date = date
 
-                actual_date = date
+                if limit_date:
+                    if date == limit_date:
+                        break
 
-            if limit_date:
-                if date == limit_date:
-                    break
+                obj["date"] = date
+                obj["tweet_text"] = tweet._json["full_text"]
 
-            obj["date"] = date
-            obj["tweet_text"] = tweet._json["full_text"]
-
-            db.tweets.update_one({'hashtag': hashtag}, {
-                '$push': {'tweets': obj}})
+                db.tweets.update_one({'hashtag': hashtag}, {
+                    '$push': {'tweets': obj}})
+            except Exception as e:
+                print('Exception Time Out!')
+                time.sleep(180)
+                continue
 
         return "Hashtag "+hashtag+" inserida no banco com sucesso."
 
