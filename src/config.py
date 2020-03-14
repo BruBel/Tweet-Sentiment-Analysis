@@ -2,3 +2,5 @@ CONSUMER_KEY = 'SM7Sd6W9s6FBUr3V4yONxuAYe'
 CONSUMER_SECRET = 'X8zde1H80NjMOSO1WtPQ8gKeq7UPLyNGJR2ymrAWGsoLpBtPTs'
 ACESS_TOKEN = '1233009049341452288-2bLG9EDiQWsCGYlP6rtXh77U2v30Nj'
 ACESS_TOKEN_SECRET = 'vHWXXONFQGIMJVbGHtwi1NMvuLfZN0KJ0ztSlGSOOqHLu'
+
+MONGO_CLIENT = 'mongodb+srv://brunobelluzzo:bruno0911@twitteranalysis-zrfix.mongodb.net/test?retryWrites=true&w=majority'

@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import pymongo
 import time
+import requests
 
 
 class TwitterCrawler:
@@ -23,8 +24,6 @@ class TwitterCrawler:
         api = tweepy.API(auth, wait_on_rate_limit=True)
 
         db = self.mongo_client.Twitter
-
-        df = pd.DataFrame()
 
         dates = []
         tweets = []
@@ -46,25 +45,30 @@ class TwitterCrawler:
 
                 date = str(ts.day)+"/"+str(ts.month)+"/"+str(ts.year)
 
-                if actual_date == 0:
+                # if actual_date == 0:
 
-                    actual_date = date
+                #     actual_date = date
 
-                if date != actual_date:
+                # if date != actual_date:
 
-                    actual_date = date
+                #     actual_date = date
 
-                if limit_date:
-                    if date == limit_date:
-                        break
+                # if limit_date:
+                #     if date == limit_date:
+                #         break
 
+                pred = requests.post(
+                    'http://localhost:8000/predict', json={'tweet': tweet._json["full_text"]})
+
+                resp = pred.json()
                 obj["date"] = date
                 obj["tweet_text"] = tweet._json["full_text"]
+                obj['sentiment'] = resp
 
                 db.tweets.update_one({'hashtag': hashtag}, {
                     '$push': {'tweets': obj}})
             except Exception as e:
-                print('Exception Time Out!')
+                print(str(e))
                 time.sleep(180)
                 continue
 
