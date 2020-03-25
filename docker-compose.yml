@@ -1,0 +1,11 @@
+version: '2.0'
+services:
+  ia:
+    image: twitter-sentiment-analysis:10.0
+    container_name: twitter-sentiment-analysis
+    build:
+      context: .
+      dockerfile: 'Dockerfile'
+    restart: always
+    ports:
+      - '7000:7000'

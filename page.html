@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Primeiro app Vue.js</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Twitter Sentiment Analysis</h1>
+
+    <div id="graphics">
+      Contador: {{ info }}
+
+      <!-- <button v-on:click="toggle">Só vai</button> -->
+    </div>
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    var primeiroApp = new Vue({
+      el: '#primeiroApp',
+
+      data: {
+        contador: 'CONTADORRRR',
+        timer: null
+      }
+    });
+
+    var request = new Vue({
+      el: '#graphics',
+
+      data() {
+        return {
+          info: null
+        };
+      },
+      mounted() {
+        axios
+          .get('http://localhost:5057/getHashtag/%23dota', {
+            data: { hashtag: '#dota' }
+          })
+          .then(response => {
+            console.log(response);
+            this.info = response;
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  </script>
+</html>
